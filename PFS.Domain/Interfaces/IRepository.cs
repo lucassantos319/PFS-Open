@@ -8,13 +8,13 @@ public interface IRepository<T> where T : class
 
     abstract void ExecuteSql(string sql, object values);
     
-    abstract IEnumerable<T> ExecuteReturn(string sql);
+    abstract IEnumerable<T> ExecuteReturn<T>(string sql);
 
     abstract void Delete(int id);
 
-    abstract int Insert(object obj);
+    abstract int InsertDB(object obj);
    
-    abstract IEnumerable<T> Get(bool orderBy = false,params string[] values);
+    abstract IEnumerable<T> Get(bool orderBy = false,int limit = 0,params string[] values);
 
     void Update(object obj);
 }

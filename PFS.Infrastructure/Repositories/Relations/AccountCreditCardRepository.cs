@@ -1,5 +1,7 @@
+using PFS.Domain.Extensions;
 using PFS.Domain.Models.Entities.Relations;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories;
 
@@ -19,7 +21,7 @@ public class AccountCreditCardRepository : BaseRepository<AccountCreditCard>
     {
         try
         {
-            return Get(false,CreateQuery(filter));
+            return Get(false,filter.limit,CreateQuery(filter));
         }
         catch (Exception ex)
         {
@@ -46,5 +48,20 @@ public class AccountCreditCardRepository : BaseRepository<AccountCreditCard>
         }
 
         return whereList.ToArray();
+    }
+    
+    public ResponseResult<int> Create(AccountCreditCard obj)
+    {
+        var result= new ResponseResult<int>();
+            
+        var insertAccountCreditCard = InsertDB(obj);
+        if (insertAccountCreditCard == 0)
+        {
+            result.GenerateErrorStatus("Erro ao adicionar relação conta e cartão de credito !");
+            return result;
+        }
+
+        result.obj = new[]{insertAccountCreditCard};
+        return result;
     }
 }

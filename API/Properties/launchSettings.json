@@ -8,6 +8,7 @@
       "applicationUrl": "http://localhost:5214",
       "environmentVariables": {
         "ConnectionStringMG": "Host=localhost;Port=5432;UserName=postgres;Password=admin;Database=PFS-MG",
+        "ConnectionStringCORE": "Host=localhost;Port=5432;UserName=postgres;Password=admin;Database=PFS-CORE",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

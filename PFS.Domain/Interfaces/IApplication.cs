@@ -1,9 +1,11 @@
+using PFS.Domain.Models.RequestBody;
+
 namespace PFS.Domain.Interfaces;
 
 public interface IApplication<T> where T : class
 {
-    protected int Create(T obj);
-    public void Update(T obj);
-    public void DeleteById(int id);
+    ResponseResult<int> Create(T obj);
+    void Update(T obj);
+    void DeleteById(int id);
 
 }

@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Integrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\PFS.Domain\PFS.Domain.csproj" />
     </ItemGroup>
 

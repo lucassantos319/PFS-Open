@@ -7,6 +7,8 @@ using PFS.Applications;
 using PFS.Domain.Models.RequestBody;
 using API.Controllers;
 using Microsoft.Extensions.Configuration;
+using PFS.Application.Applications.Management;
+using WebApplication1.Controllers.Management;
 
 namespace Tests.API
 {

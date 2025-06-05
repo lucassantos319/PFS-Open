@@ -5,5 +5,6 @@ namespace PFS.Domain.Models.Filters
     public class UserFilter : Users
     {
         public IEnumerable<int> status { get; set; }
+        public int limit { get; set; }
     }
 }

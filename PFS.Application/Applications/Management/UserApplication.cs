@@ -1,10 +1,11 @@
 ﻿using PFS.Domain.Interfaces;
 using PFS.Domain.Models.Entities;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 using PFS.Infrastructure.Repositories;
 using PFS.Infrastrucuture.Services;
 
-namespace PFS.Applications
+namespace PFS.Application.Applications.Management
 {
     public class UserApplication : IApplication<Users>
     {
@@ -16,39 +17,22 @@ namespace PFS.Applications
                 _repository = new UserRepository(connectionString);
         }
 
-        public IEnumerable<Users> GetByFilter(UserFilter filter)
+        public IEnumerable<Users> Get(UserFilter filter)
         {
-            try
-            {
-                var users = _repository.Get(filter);
-                if (users == null)
-                    return Enumerable.Empty<Users>();
-
-                return users;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return _repository.Get(filter);
         }
 
         public string Login(UserFilter filter)
         {
-            try
-            {
-                var user = _repository.Get(filter);
-                if (user == null || user.Count() == 0)
-                    return null;
+            var user = _repository.Get(filter);
+            var usersEnumerable = user as Users[] ?? user.ToArray();
+            if (usersEnumerable.Count() == 0)
+                return string.Empty;
 
-                return TokenService.Generate(user.FirstOrDefault());
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return TokenService.Generate(usersEnumerable.FirstOrDefault() ?? throw new InvalidOperationException());
         }
 
-        public int Create(Users obj)
+        public ResponseResult<int> Create(Users obj)
         {
             throw new NotImplementedException();
         }

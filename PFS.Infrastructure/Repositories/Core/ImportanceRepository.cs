@@ -1,28 +1,28 @@
 ﻿using PFS.Domain.Extensions;
-using PFS.Domain.Models.Entities.Management;
+using PFS.Domain.Models.Entities;
 using PFS.Domain.Models.Filters;
 using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories
 {
-    public class BankRepository : BaseRepository<Banks>
+    public class ImportanceRepository : BaseRepository<Importance>
     {
-        public BankRepository(string connection) : base(connection)
+        public ImportanceRepository(string connection) : base(connection)
         {
         }
 
-        public override string[] _columns => new[] { "name" };
+        public override string[] _columns => new[] {"name"};
 
-        public override string _tableName => "banks";
-        public override string[] _innerJoinTable => new[] { "" };
-        public override string _abvTable => "ba";
+        public override string _tableName => "importance";
+        public override string[] _innerJoinTable { get; }
+        public override string _abvTable => "i";
         public override string[] _columnsInnerJoin { get; }
 
-        public IEnumerable<Banks> Get(BankFilter filter)
+        public IEnumerable<Importance> Get(ImportanceFilter filter)
         {
             try
             {
-                return Get(false,filter.limit, CreateQuery(filter));
+                return Get(false, filter.limit,CreateQuery(filter));
             }
             catch (Exception ex)
             {
@@ -30,7 +30,7 @@ namespace PFS.Infrastructure.Repositories
             }
         }
 
-        private string[] CreateQuery(BankFilter filter)
+        private string[] CreateQuery(ImportanceFilter filter)
         {
             var whereList = new List<string>();
 
@@ -46,18 +46,18 @@ namespace PFS.Infrastructure.Repositories
             return whereList.ToArray();
         }
         
-        public ResponseResult<int> Create(Banks obj)
+        public ResponseResult<int> Create(Importance obj)
         {
             var result= new ResponseResult<int>();
             
-            var insertBanks = InsertDB(obj);
-            if (insertBanks == 0)
+            var insertImportance = InsertDB(obj);
+            if (insertImportance == 0)
             {
-                result.GenerateErrorStatus("Erro ao adicionar banco !");
+                result.GenerateErrorStatus("Erro ao adicionar importancia !");
                 return result;
             }
 
-            result.obj = new[]{insertBanks};
+            result.obj = new[]{insertImportance};
             return result;
         }
     }

@@ -1,5 +1,7 @@
-﻿using PFS.Domain.Models.Entities.Management;
+﻿using PFS.Domain.Extensions;
+using PFS.Domain.Models.Entities.Management;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories
 {
@@ -20,7 +22,7 @@ namespace PFS.Infrastructure.Repositories
         {
             try
             {
-                return Get(false, CreateQuery(filter));
+                return Get(false, filter.limit, CreateQuery(filter));
             }
             catch (Exception ex)
             {
@@ -45,9 +47,25 @@ namespace PFS.Infrastructure.Repositories
                 
                 if (filter.painels != null && filter.painels.Count() > 0)
                     whereList.Add($"{_abvTable}.painel_id in ({string.Join(",", filter.status)})");
+                
             }
 
             return whereList.ToArray();
+        }
+        
+        public ResponseResult<int> Create(Accounts obj)
+        {
+            var result= new ResponseResult<int>();
+            
+            var insertAccount = InsertDB(obj);
+            if (insertAccount == 0)
+            {
+                result.GenerateErrorStatus("Erro ao adicionar conta !");
+                return result;
+            }
+
+            result.obj = new[]{insertAccount};
+            return result;
         }
     }
 }

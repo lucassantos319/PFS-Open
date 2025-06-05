@@ -28,7 +28,7 @@ namespace PFS.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public int Insert(object obj)
+        public int InsertDB(object obj)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace PFS.Infrastructure.Repositories
             return insertId;
         }
 
-        public virtual IEnumerable<T> ExecuteReturn(string sql)
+        public virtual IEnumerable<T> ExecuteReturn<T>(string sql)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace PFS.Infrastructure.Repositories
             _connection.Close();
         }
 
-        public IEnumerable<T> Get(bool orderBy, params string[] values)
+        public IEnumerable<T> Get(bool orderBy,int limit = 0, params string[] values)
         {
             string innerJoinTablesValues = string.Empty;
             foreach (var value in _innerJoinTable)
@@ -126,7 +126,10 @@ namespace PFS.Infrastructure.Repositories
             if (orderBy)
                 query += $" order by {_tableName}.id";
 
-            return ExecuteReturn(query);
+            if (limit > 0)
+                query += $" limit {limit}";
+            
+            return ExecuteReturn<T>(query);
         }
 
         public void Update(object obj)

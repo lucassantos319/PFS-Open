@@ -6,5 +6,6 @@ namespace PFS.Domain.Models.Filters
     {
         public IEnumerable<int> bank { get; set; }
         public IEnumerable<int> painels{ get; set; }
+        public bool updated_integration { get; set; }
     }
 }

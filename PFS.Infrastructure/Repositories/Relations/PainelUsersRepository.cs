@@ -1,6 +1,7 @@
 using PFS.Domain.Extensions;
 using PFS.Domain.Models.Entities.Relations;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories;
 
@@ -20,7 +21,7 @@ public class PainelUsersRepository : BaseRepository<PainelUsers>
     {
         try
         {
-            return Get(false, CreateQuery(filter));
+            return Get(false,filter.limit, CreateQuery(filter));
         }
         catch (Exception ex)
         {
@@ -59,19 +60,18 @@ public class PainelUsersRepository : BaseRepository<PainelUsers>
         return whereList.ToArray();
     }
     
-    public int Create(PainelUsers obj)
+    public ResponseResult<int> Create(PainelUsers obj)
     {
-        try
+        var result= new ResponseResult<int>();
+            
+        var insertPainelUsers = InsertDB(obj);
+        if (insertPainelUsers == 0)
         {
-            var id = Insert(obj);
-            if (id != 0)
-                return id;
+            result.GenerateErrorStatus("Erro ao adicionar relação painel user !");
+            return result;
         }
-        catch (Exception ex)
-        {
-            return 0;
-        }
-        
-        return 0;
+
+        result.obj = new[]{insertPainelUsers};
+        return result;
     }
 }

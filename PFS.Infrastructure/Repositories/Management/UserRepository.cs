@@ -1,5 +1,7 @@
-﻿using PFS.Domain.Models.Entities;
+﻿using PFS.Domain.Extensions;
+using PFS.Domain.Models.Entities;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories
 {
@@ -19,7 +21,7 @@ namespace PFS.Infrastructure.Repositories
         {
             try
             {
-                return Get(false, CreateQuery(filter));
+                return Get(false, filter.limit,CreateQuery(filter));
             }
             catch (Exception ex)
             {
@@ -47,6 +49,21 @@ namespace PFS.Infrastructure.Repositories
             }
 
             return whereList.ToArray();
+        }
+        
+        public ResponseResult<int> Create(Users obj)
+        {
+            var result= new ResponseResult<int>();
+            
+            var insertUser = InsertDB(obj);
+            if (insertUser == 0)
+            {
+                result.GenerateErrorStatus("Erro ao adicionar usuario !");
+                return result;
+            }
+
+            result.obj = new[]{insertUser};
+            return result;
         }
     }
 }

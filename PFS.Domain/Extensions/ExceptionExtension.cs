@@ -11,7 +11,7 @@ namespace PFS.Domain.Extensions
 
         public static void GenerateErrorStatus<T>(this ResponseResult<T> result,params string[] errors)
         {
-            result.errors = errors;
+            result.errors = errors.Concat(result.errors);
             result.success = false;
         }
         

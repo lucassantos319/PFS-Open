@@ -17,6 +17,7 @@ namespace PFS.Domain.Models.Entities.Management
         [JsonIgnore] 
         public string db_connection { get; set; }
         public int status_id { get; set; }
+        public double percentual_month_comparation{get;set;}
     }
 }
 

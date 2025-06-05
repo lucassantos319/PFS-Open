@@ -1,6 +1,7 @@
 using PFS.Domain.Extensions;
 using PFS.Domain.Models.Entities.Management;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories;
 
@@ -11,7 +12,7 @@ public class PainelRepository : BaseRepository<Painel>
     }
 
     public override string[] _columns => new[]
-        { "name","current_amount","current_debit_amount","current_income_amount","db_connection","status_id"}; 
+        { "name","current_amount","current_debit_amount","current_income_amount","db_connection","status_id","percentual_month_comparation"}; 
         
     public override string _tableName => "painel";
     public override string[] _innerJoinTable => new[] { "painel_users pu on pu.painel_id = pa.id" };
@@ -22,7 +23,7 @@ public class PainelRepository : BaseRepository<Painel>
     {
         try
         {
-            var result = Get(false, CreateQuery(filter));
+            var result = Get(false,filter.limit, CreateQuery(filter));
              result.All(x =>
              {
                   x.role_user = x.role.ToString();
@@ -53,21 +54,18 @@ public class PainelRepository : BaseRepository<Painel>
         return whereList.ToArray();
     }
 
-    public int Create(Painel obj)
+    public ResponseResult<int> Create(Painel obj)
     {
-        try
+        var result= new ResponseResult<int>();
+            
+        var insertPainel = InsertDB(obj);
+        if (insertPainel == 0)
         {
-            var query = $"insert into {_tableName} ({_columns.SelectQueryInsert()}) values ({_columns.ValuesQueryInsert()})";
-            var id = int.Parse(ExecuteInsert(query,obj).ToString());
+            result.GenerateErrorStatus("Erro ao adicionar painel !");
+            return result;
+        }
 
-            if (id != 0)
-                return id;
-        }
-        catch (Exception ex)
-        {
-            return 0;
-        }
-        
-        return 0;
+        result.obj = new[]{insertPainel};
+        return result;
     }
 }

@@ -1,5 +1,7 @@
+using PFS.Domain.Extensions;
 using PFS.Domain.Models.Entities.Management;
 using PFS.Domain.Models.Filters;
+using PFS.Domain.Models.RequestBody;
 
 namespace PFS.Infrastructure.Repositories.Management;
 
@@ -19,7 +21,7 @@ public class RolesRepository : BaseRepository<Roles>
     {
         try
         {
-            return Get(false, CreateQuery(filter));
+            return Get(false,filter.limit, CreateQuery(filter));
         }
         catch (Exception ex)
         {
@@ -41,5 +43,20 @@ public class RolesRepository : BaseRepository<Roles>
         }
         
         return whereList.ToArray();
+    }
+    
+    public ResponseResult<int> Create(Roles obj)
+    {
+        var result= new ResponseResult<int>();
+            
+        var insertRole = InsertDB(obj);
+        if (insertRole == 0)
+        {
+            result.GenerateErrorStatus("Erro ao adicionar role !");
+            return result;
+        }
+
+        result.obj = new[]{insertRole};
+        return result;
     }
 }
